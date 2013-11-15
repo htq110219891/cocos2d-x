@@ -460,4 +460,9 @@ void CCArmatureAnimation::frameEvent(CCBone *bone, const char *frameEventName, i
         m_sFrameEventQueue.push(frameEvent);
     }
 }
+
+void CCArmatureAnimation::removeBone(CCBone *bone)
+{
+    m_pTweenList->removeObject(bone->getTween());
+}
 NS_CC_EXT_END

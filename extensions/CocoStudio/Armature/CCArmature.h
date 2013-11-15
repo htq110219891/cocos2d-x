@@ -175,6 +175,9 @@ protected:
      */
     void updateBlendType(CCBlendType blendType);
 
+    void addBoneToArmature(CCBone *bone);
+    void removeBoneFromArmature(CCBone *bone);
+
     CC_SYNTHESIZE(CCArmatureData *, m_pArmatureData, ArmatureData);
 
     CC_SYNTHESIZE(CCBatchNode *, m_pBatchNode, BatchNode);

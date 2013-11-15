@@ -87,41 +87,6 @@ public:
 
     void changeDisplayByIndex(int index, bool force);
 
-    /**
-     * Add a child to this bone, and it will let this child call setParent(CCBone *parent) function to set self to it's parent
-     * @param 	child  the child you want to add
-     */
-    void addChildBone(CCBone *child);
-
-    /**
-     * Set parent bone.
-     * If parent is NUll, then also remove this bone from armature.
-     * It will not set the CCArmature, if you want to add the bone to a CCArmature, you should use CCArmature::addBone(CCBone *bone, const char* parentName).
-     *
-     * @param parent  the parent bone.
-     *          NULL : remove this bone from armature
-     */
-    void setParentBone(CCBone *parent);
-
-    /**
-     * Get parent bone
-     * @return parent bone
-     */
-    CCBone *getParentBone();
-
-    using CCNode::removeFromParent;
-    /**
-     * Remove itself from its parent.
-     * @param 	recursion    whether or not to remove childBone's display
-     */
-    void removeFromParent(bool recursion);
-
-    /**
-     * Removes a child CCBone
-     * @param 	bone   the bone you want to remove
-     */
-    void removeChildBone(CCBone *bone, bool recursion);
-
     void update(float delta);
 
     void updateDisplayedColor(const ccColor3B &parentColor);
@@ -137,6 +102,8 @@ public:
     void updateZOrder();
 
     virtual void setZOrder(int zOrder);
+
+    virtual void setParent(CCNode* parent);
 
     CCTween *getTween();
 

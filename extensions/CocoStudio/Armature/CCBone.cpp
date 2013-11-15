@@ -202,7 +202,7 @@ void CCBone::update(float delta)
         m_tWorldInfo->skewX = m_pTweenData->skewX + m_fSkewX + m_fRotationX;
         m_tWorldInfo->skewY = m_pTweenData->skewY + m_fSkewY - m_fRotationY;
 
-        if(m_pParentBone)
+        if(m_pParent)
         {
             applyParentTransform(m_pParentBone);
         }
@@ -296,65 +296,6 @@ void CCBone::updateZOrder()
     }
 }
 
-void CCBone::addChildBone(CCBone *child)
-{
-    CCAssert( NULL != child, "Argument must be non-nil");
-    CCAssert( NULL == child->m_pParentBone, "child already added. It can't be added again");
-
-    if(!m_pChildren)
-    {
-        m_pChildren = CCArray::createWithCapacity(4);
-        m_pChildren->retain();
-    }
-
-    if (m_pChildren->indexOfObject(child) == UINT_MAX)
-    {
-        m_pChildren->addObject(child);
-        child->setParentBone(this);
-    }
-}
-
-void CCBone::removeChildBone(CCBone *bone, bool recursion)
-{
-    if ( m_pChildren->indexOfObject(bone) != UINT_MAX )
-    {
-        if(recursion)
-        {
-            CCArray *_ccbones = bone->m_pChildren;
-            CCObject *_object = NULL;
-            CCARRAY_FOREACH(_ccbones, _object)
-            {
-                CCBone *_ccBone = (CCBone *)_object;
-                bone->removeChildBone(_ccBone, recursion);
-            }
-        }
-
-        bone->setParentBone(NULL);
-
-        bone->getDisplayManager()->setCurrentDecorativeDisplay(NULL);
-
-        m_pChildren->removeObject(bone);
-    }
-}
-
-void CCBone::removeFromParent(bool recursion)
-{
-    if (NULL != m_pParentBone)
-    {
-        m_pParentBone->removeChildBone(this, recursion);
-    }
-}
-
-void CCBone::setParentBone(CCBone *parent)
-{
-    m_pParentBone = parent;
-}
-
-CCBone *CCBone::getParentBone()
-{
-    return m_pParentBone;
-}
-
 void CCBone::setChildArmature(CCArmature *armature)
 {
     if (m_pChildArmature != armature)
@@ -384,6 +325,12 @@ void CCBone::setZOrder(int zOrder)
 {
     if (m_nZOrder != zOrder)
         CCNode::setZOrder(zOrder);
+}
+
+void CCBone::setParent(CCNode* parent)
+{
+    CCNode::setParent(parent);
+    m_pParentBone = dynamic_cast<CCBone*>(parent);
 }
 
 

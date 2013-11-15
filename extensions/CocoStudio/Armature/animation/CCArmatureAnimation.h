@@ -229,6 +229,9 @@ protected:
 
     inline bool isIgnoreFrameEvent() { return m_bIgnoreFrameEvent; }
 
+    void removeBone(CCBone *bone);
+
+    friend class CCArmature;
     friend class CCTween;
 protected:
     //! CCAnimationData save all MovementDatas this animation used.

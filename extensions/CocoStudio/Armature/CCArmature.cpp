@@ -265,7 +265,7 @@ void CCArmature::addBone(CCBone *bone, const char *parentName)
         CCBone *boneParent = (CCBone *)m_pBoneDic->objectForKey(parentName);
         if (boneParent)
         {
-            boneParent->addChildBone(bone);
+            boneParent->addChild(bone);
         }
         else
         {
@@ -276,11 +276,19 @@ void CCArmature::addBone(CCBone *bone, const char *parentName)
     {
         m_pTopBoneList->addObject(bone);
     }
+    
+    addBoneToArmature(bone);
 
-    bone->setArmature(this);
-
-    m_pBoneDic->setObject(bone, bone->getName());
-    addChild(bone);
+    CCObject *object = NULL;
+    CCArray *boneChildren = bone->getChildren();
+    CCARRAY_FOREACH(boneChildren, object)
+    {
+        CCBone *childBone = static_cast<CCBone*>(object);
+        if (!m_pBoneDic->objectForKey(childBone->getName()))
+        {
+            addBoneToArmature(childBone);
+        }
+    }
 }
 
 
@@ -288,15 +296,49 @@ void CCArmature::removeBone(CCBone *bone, bool recursion)
 {
     CCAssert(bone != NULL, "bone must be added to the bone dictionary!");
 
-    bone->setArmature(NULL);
-    bone->removeFromParent(recursion);
+    bone->removeFromParent();
 
     if (m_pTopBoneList->containsObject(bone))
     {
         m_pTopBoneList->removeObject(bone);
     }
+
+    removeBoneFromArmature(bone);
+
+    CCObject *object = NULL;
+    CCArray *boneChildren = bone->getChildren();
+    CCARRAY_FOREACH(boneChildren, object)
+    {
+        CCBone *childBone = static_cast<CCBone*>(object);
+        if (m_pBoneDic->objectForKey(childBone->getName()))
+        {
+            removeBoneFromArmature(childBone);
+        }
+    }
+}
+
+
+
+void CCArmature::addBoneToArmature(CCBone *bone)
+{
+    bone->setArmature(this);
+    m_pBoneDic->setObject(bone, bone->getName());
+
+    if( !m_pChildren )
+    {
+        m_pChildren = CCArray::createWithCapacity(4);
+        m_pChildren->retain();
+    }
+
+    m_bReorderChildDirty = true;
+    m_pChildren->addObject(bone);
+}
+
+void CCArmature::removeBoneFromArmature(CCBone *bone)
+{
+    bone->setArmature(NULL);
     m_pBoneDic->removeObjectForKey(bone->getName());
-    removeChild(bone, true);
+    m_pChildren->removeObject(bone);
 }
 
 
@@ -310,10 +352,10 @@ void CCArmature::changeBoneParent(CCBone *bone, const char *parentName)
 {
     CCAssert(bone != NULL, "bone must be added to the bone dictionary!");
 
-    if(bone->getParentBone())
+    if(bone->getParent())
     {
-        bone->getParentBone()->getChildren()->removeObject(bone);
-        bone->setParentBone(NULL);
+        bone->getParent()->getChildren()->removeObject(bone);
+        bone->setParent(NULL);
     }
 
     if (parentName != NULL)
@@ -322,7 +364,7 @@ void CCArmature::changeBoneParent(CCBone *bone, const char *parentName)
 
         if (boneParent)
         {
-            boneParent->addChildBone(bone);
+            boneParent->addChild(bone);
             if (m_pTopBoneList->containsObject(bone))
             {
                 m_pTopBoneList->removeObject(bone);
@@ -598,7 +640,6 @@ void CCArmature::updateBlendType(CCBlendType blendType)
     }
     ccGLBlendFunc(blendFunc.src, blendFunc.dst);
 }
-
 
 
 void CCArmature::visit()
