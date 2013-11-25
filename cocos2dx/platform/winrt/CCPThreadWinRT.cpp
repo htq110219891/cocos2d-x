@@ -1,5 +1,6 @@
 /****************************************************************************
-Copyright (c) 2013 cocos2d-x.org
+Copyright (c) 2010-2013 cocos2d-x.org
+Copyright (c) Microsoft Open Technologies, Inc.
 
 http://www.cocos2d-x.org
 
@@ -21,38 +22,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
+#include "CCPThreadWinRT.h"
 
-#ifndef __CC_EXTENTIONS_CCCOMCONTROLLER_H__
-#define __CC_EXTENTIONS_CCCOMCONTROLLER_H__
 
-#include "cocos2d.h"
-#include "CCInputDelegate.h"
+NS_CC_BEGIN
 
-NS_CC_EXT_BEGIN
-/**
- *  @lua NA
- */
-class CCComController : public cocos2d::CCComponent, public CCInputDelegate
+void pthread_mutex_init(pthread_mutex_t* m, void* attributes) {
+	*m = CreateMutexEx(NULL,FALSE,0,NULL);
+}
+
+int pthread_mutex_lock(pthread_mutex_t* m) {
+	return WaitForSingleObjectEx(*m,INFINITE,FALSE);
+}
+
+int pthread_mutex_unlock(pthread_mutex_t* m) {
+	return ReleaseMutex(*m);
+}
+
+void pthread_mutex_destroy(pthread_mutex_t* m) 
 {
-public:
-   /**
-    *  @js ctor
-    */
-   CCComController(void);
-   /**
-    *  @js NA
-    */
-   virtual ~CCComController(void);
-   virtual bool init();
-   virtual void onEnter();
-   virtual void onExit();
-   virtual void update(float delta);
-   virtual bool isEnabled() const;
-   virtual void setEnabled(bool b);
-    
-   static CCComController* create(void);
-};
+	if(m)
+	{
+		CloseHandle(*m);
+	}
+}
 
-NS_CC_EXT_END
 
-#endif  // __FUNDATION__CCCOMPONENT_H__
+NS_CC_END

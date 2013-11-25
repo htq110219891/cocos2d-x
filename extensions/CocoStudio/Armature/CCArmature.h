@@ -103,11 +103,19 @@ public:
     virtual void changeBoneParent(CCBone *bone, const char *parentName);
     /**
      * Remove a bone with the specified name. If recursion it will also remove child CCBone recursionly.
+     * This function is deprecated, please use void removeBone(CCBone *bone);
      *
      * @param bone The bone you want to remove
      * @param recursion Determine whether remove the bone's child  recursion.
      */
-    virtual void removeBone(CCBone *bone, bool recursion);
+    CC_DEPRECATED_ATTRIBUTE virtual void removeBone(CCBone *bone, bool recursion);
+
+    /**
+     * Remove a bone with the specified name.
+     *
+     * @param bone The bone you want to remove
+     */
+    virtual void removeBone(CCBone *bone);
 
     /**
      * Get CCArmature's bone dictionary
@@ -147,8 +155,11 @@ public:
 
     virtual CCTextureAtlas *getTexureAtlasWithTexture(CCTexture2D *texture);
 
-
+#if ENABLE_PHYSICS_BOX2D_DETECT || ENABLE_PHYSICS_CHIPMUNK_DETECT
     virtual void setColliderFilter(CCColliderFilter *filter);
+#elif ENABLE_PHYSICS_SAVE_CALCULATED_VERTEX
+    virtual void drawContour();
+#endif
 
 #if ENABLE_PHYSICS_BOX2D_DETECT
     /**

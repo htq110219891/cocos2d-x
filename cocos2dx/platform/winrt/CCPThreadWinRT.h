@@ -1,5 +1,6 @@
 /****************************************************************************
-Copyright (c) 2013 cocos2d-x.org
+Copyright (c) 2010 cocos2d-x.org
+Copyright (c) Microsoft Open Technologies, Inc.
 
 http://www.cocos2d-x.org
 
@@ -22,37 +23,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __CC_EXTENTIONS_CCCOMCONTROLLER_H__
-#define __CC_EXTENTIONS_CCCOMCONTROLLER_H__
+#ifndef __CCPTHREADWINRT_H__
+#define __CCPTHREADWINRT_H__
 
-#include "cocos2d.h"
-#include "CCInputDelegate.h"
+#include "platform/CCPlatformMacros.h"
 
-NS_CC_EXT_BEGIN
-/**
- *  @lua NA
- */
-class CCComController : public cocos2d::CCComponent, public CCInputDelegate
-{
-public:
-   /**
-    *  @js ctor
-    */
-   CCComController(void);
-   /**
-    *  @js NA
-    */
-   virtual ~CCComController(void);
-   virtual bool init();
-   virtual void onEnter();
-   virtual void onExit();
-   virtual void update(float delta);
-   virtual bool isEnabled() const;
-   virtual void setEnabled(bool b);
-    
-   static CCComController* create(void);
-};
+#include <Windows.h>
 
-NS_CC_EXT_END
+NS_CC_BEGIN
 
-#endif  // __FUNDATION__CCCOMPONENT_H__
+typedef HANDLE pthread_t;
+typedef HANDLE pthread_mutex_t;
+typedef int pthread_cond_t;
+#define pthread_cond_wait(x, y)
+
+void pthread_mutex_init(pthread_mutex_t* m, void* attributes);
+
+int pthread_mutex_lock(pthread_mutex_t* m);
+
+int pthread_mutex_unlock(pthread_mutex_t* m);
+
+void pthread_mutex_destroy(pthread_mutex_t* m);
+
+#define pthread_cond_destroy(x)
+#define pthread_cond_signal(x)
+#define pthread_cond_init(x, y)
+
+
+
+
+NS_CC_END
+
+#endif // __CCPTHREADWINRT_H__
