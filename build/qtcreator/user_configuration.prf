@@ -8,5 +8,5 @@ CONFIG += cocos2d_chipmunk
 # CONFIG += cocos2d_box2d
 
 # Qt5 port is not implemented, this option reserved for future.
-CONFIG += cocos2d_native_api
-#CONFIG += cocos2d_qt_api
+#CONFIG += cocos2d_native_api
+CONFIG += cocos2d_qt_api
