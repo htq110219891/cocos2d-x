@@ -60,6 +60,8 @@ build_*_vc10/
 *.mode*v*
 *.pbxuser
 *.xcbkptlist
+
+*.pro.user
 *.xcscheme
 *.xcworkspacedata
 *.xcuserstate
