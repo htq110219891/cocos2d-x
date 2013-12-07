@@ -43,7 +43,7 @@ SOURCES += \
     $$cc_files(external/unzip/*.cpp) \
     $$cc_files(external/json/*.cpp) \
     $$cc_files(extensions/proj.win32/*.cpp) \
-    $$cc_files(extensions/assets-manager/*.cpp) \
+    #$$cc_files(extensions/assets-manager/*.cpp) \
     $$cc_files(extensions/physics-nodes/*.cpp) \
     $$cc_files(extensions/GUI/CCControlExtension/*.cpp) \
     $$cc_files(extensions/GUI/CCEditBox/*.cpp) \
@@ -97,7 +97,7 @@ HEADERS += \
     ../../external/tinyxml2/tinyxml2.h \
     $$cc_files(external/unzip/*.h) \
     $$cc_files(external/json/*.h) \
-    $$cc_files(extensions/assets-manager/*.h) \
+    #$$cc_files(extensions/assets-manager/*.h) \
     $$cc_files(extensions/physics-nodes/*.h) \
     $$cc_files(extensions/GUI/CCControlExtension/*.h) \
     $$cc_files(extensions/GUI/CCEditBox/*.h) \
@@ -108,6 +108,9 @@ HEADERS += \
 cocos2d_qt_api {
     SOURCES += $$cc_files(cocos/2d/platform/qt5/*.cpp)
     HEADERS += $$cc_files(cocos/2d/platform/qt5/*.h)
+
+    SOURCES += $$cc_files(cocos/2d/platform/*.cpp)
+    HEADERS += $$cc_files(cocos/2d/platform/*.h)
 }
 
 cocos2d_native_api {
